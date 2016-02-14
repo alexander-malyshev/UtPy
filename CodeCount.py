@@ -6,24 +6,20 @@ anExtensionsList = {"c", "cpp", "h", "hxx", "lxx", "hpp", "cxx", "py"}
 def Count(thePath,
           theSize,
           theLinesNb):
-  aDirList = os.listdir(thePath)
-  for aDir in aDirList:
-    aPath = os.path.join(thePath, aDir)
-    if not os.path.isdir(aPath):
-      continue
-    aCurSize, aCurLinesNb = Count(aPath, 0, 0)
-    theSize += aCurSize
-    theLinesNb += aCurLinesNb
-
-  for aFile in aDirList:
-    aPath = os.path.join(thePath, aFile)
-    if not os.path.isfile(aPath):
-      continue
-
-    anExtension = aPath.split(".")[-1]
-    if anExtension in anExtensionsList:
-      theSize += os.path.getsize(aPath)
-      theLinesNb += sum(1 for line in open(aPath, "r"))
+  aDirPaths = os.listdir(thePath)
+  for anEntry in aDirPaths:
+    aPath = os.path.join(thePath, anEntry)
+    if os.path.isfile(aPath):
+      anExtension = aPath.split(".")[-1]
+      if anExtension in anExtensionsList:
+        theSize += os.path.getsize(aPath)
+        theLinesNb += sum(1 for line in open(aPath, "r"))
+    elif os.path.isdir(aPath):
+      aCurSize, aCurLinesNb = Count(aPath, 0, 0)
+      theSize += aCurSize
+      theLinesNb += aCurLinesNb
+    else:
+      print("What should we do with a {}? It's not a file or a directory?".format(aPath))
 
   return theSize, theLinesNb
 
