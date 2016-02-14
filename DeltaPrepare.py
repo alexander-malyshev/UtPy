@@ -5,6 +5,7 @@ import os
 
 # Take input data.
 aRepoPath = input("Please input repository path: ")
+aRepoPath = os.path.normpath(aRepoPath)
 aNb = int(input("Please input number of commits to take: "))
 
 # Iterate over last commits and prepare delta content.
@@ -18,15 +19,17 @@ for i in range(0, aNb):
 
 # Copy files to store directory order.
 aResPath = input("Please input result folder to store delta: ")
+aResPath = os.path.normpath(aResPath)
 for aFileDeltaPath in aFilesList:
   anInpPath = os.path.join(aRepoPath, aFileDeltaPath)
   aDestPath = os.path.join(aResPath, aFileDeltaPath)
 
+  # This should be safe now
   # Change directory delimeter since gitPython may return in linux notation.
-  anInpPath = anInpPath.replace('/', os.sep)
-  anInpPath = anInpPath.replace('\\', os.sep)
-  aDestPath = aDestPath.replace('/', os.sep)
-  aDestPath = aDestPath.replace('\\', os.sep)
+  # anInpPath = anInpPath.replace('/', os.sep)
+  # anInpPath = anInpPath.replace('\\', os.sep)
+  # aDestPath = aDestPath.replace('/', os.sep)
+  # aDestPath = aDestPath.replace('\\', os.sep)
 
   # Create sub directories for current file.
   aSplitList = aDestPath.split(os.sep)
