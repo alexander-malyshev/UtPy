@@ -15,7 +15,7 @@ aFilesList = list()
 for i in range(0, aNb):
   for aDiff in aComList[0 + i].diff(aComList[1 + i]):
     if aDiff.a_blob.path not in aFilesList:
-      aFilesList.append(aDiff.a_blob.path)
+      aFilesList.append(os.path.normpath(aDiff.a_blob.path))
 
 # Copy files to store directory order.
 aResPath = input("Please input result folder to store delta: ")
@@ -23,13 +23,6 @@ aResPath = os.path.normpath(aResPath)
 for aFileDeltaPath in aFilesList:
   anInpPath = os.path.join(aRepoPath, aFileDeltaPath)
   aDestPath = os.path.join(aResPath, aFileDeltaPath)
-
-  # This should be safe now
-  # Change directory delimeter since gitPython may return in linux notation.
-  # anInpPath = anInpPath.replace('/', os.sep)
-  # anInpPath = anInpPath.replace('\\', os.sep)
-  # aDestPath = aDestPath.replace('/', os.sep)
-  # aDestPath = aDestPath.replace('\\', os.sep)
 
   # Create sub directories for current file.
   aSplitList = aDestPath.split(os.sep)
