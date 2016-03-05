@@ -2,7 +2,7 @@ import os
 import shutil
 import sys
 
-# This method performs two-way recursive synchronization of a pair folders.
+# This method performs two-way recursive synchronization of a pair of folders.
 def DateSync(aSourceFolder1, aSourceFolder2):
    aFolders1 = os.listdir(aSourceFolder1)
    aFolders1.sort(key=lambda x: os.stat(os.path.join(aSourceFolder1, x)).st_mtime)
@@ -11,9 +11,10 @@ def DateSync(aSourceFolder1, aSourceFolder2):
    aFolders2.sort(key=lambda x: os.stat(os.path.join(aSourceFolder2, x)).st_mtime)
 
    for aFolder in aFolders1:
-      print("Forward  sync: {}".format(aFolder))
       aSrc = os.path.join(aSourceFolder1, aFolder)
       aDst = os.path.join(aSourceFolder2, aFolder)
+      if os.path.isdir(aSrc):
+        print("Forward  sync: {}".format(aSrc))
 
       # Recursive call on level deeper.
       if aFolder in aFolders2 and os.path.isdir(aSrc):
@@ -29,12 +30,14 @@ def DateSync(aSourceFolder1, aSourceFolder2):
         aTime1 = os.path.getmtime(aSrc)
         aTime2 = os.path.getmtime(aDst)
         if aTime1 > aTime2:
+          print("  File {} is out of date".format(aSrc))
           shutil.copyfile(aSrc, aDst)
           aTime2 = os.path.getmtime(aDst)
           os.utime(aSrc, (aTime2, aTime2))
 
       # Dir not found in another list.
       if aFolder not in aFolders2 and os.path.isdir(aSrc):
+        print("  File {} is out of date".format(aSrc))
         os.mkdir(aDst)
         shutil.copytree(aSrc, aDst)
         aTime2 = os.path.getmtime(aDst)
@@ -42,14 +45,16 @@ def DateSync(aSourceFolder1, aSourceFolder2):
 
       # File not found in another list.
       if aFolder not in aFolders2 and os.path.isfile(aSrc):
+        print("  File {} is out of date".format(aSrc))
         shutil.copyfile(aSrc, aDst)
         aTime2 = os.path.getmtime(aDst)
         os.utime(aSrc, (aTime2, aTime2))
 
    for aFolder in aFolders2:
-      print("Backward sync: {}".format(aFolder))
       aSrc = os.path.join(aSourceFolder2, aFolder)
       aDst = os.path.join(aSourceFolder1, aFolder)
+      if os.path.isdir(aSrc):
+        print("Backward sync: {}".format(aSrc))
 
       # Recursive call on level deeper.
       if aFolder in aFolders1 and os.path.isdir(aSrc):
@@ -65,12 +70,14 @@ def DateSync(aSourceFolder1, aSourceFolder2):
         aTime1 = os.path.getmtime(aSrc)
         aTime2 = os.path.getmtime(aDst)
         if aTime1 > aTime2:
+          print("  File {} is out of date".format(aSrc))
           shutil.copyfile(aSrc, aDst)
           aTime2 = os.path.getmtime(aDst)
           os.utime(aSrc, (aTime2, aTime2))
 
       # Dir not found in another list.
       if aFolder not in aFolders1 and os.path.isdir(aSrc):
+        print("  File {} is out of date".format(aSrc))
         os.mkdir(aDst)
         shutil.copytree(aSrc, aDst)
         aTime2 = os.path.getmtime(aDst)
@@ -78,6 +85,7 @@ def DateSync(aSourceFolder1, aSourceFolder2):
 
       # File not found in another list
       if aFolder not in aFolders1 and os.path.isfile(aSrc):
+        print("  File {} is out of date".format(aSrc))
         shutil.copyfile(aSrc, aDst)
         aTime2 = os.path.getmtime(aDst)
         os.utime(aSrc, (aTime2, aTime2))
