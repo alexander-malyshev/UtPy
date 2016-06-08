@@ -15,6 +15,8 @@ def Count(thePath,
         theSize += os.path.getsize(aPath)
         theLinesNb += sum(1 for line in open(aPath, "r"))
     elif os.path.isdir(aPath):
+      if anEntry == ".git" or anEntry == ".vs":
+        continue
       aCurSize, aCurLinesNb = Count(aPath, 0, 0)
       theSize += aCurSize
       theLinesNb += aCurLinesNb
