@@ -3,10 +3,12 @@ import fileinput
 
 # Function which updates reference value.
 def UpdateByReferenceValue(file, value, inc):
-  newLine = "thull_compare_contours c res 1.0 " + str(value + inc)
+  newLine = "thull_compare_contours c res 1.0 " + str(value + inc) + "\n"
   for line in fileinput.input(file, inplace = True):
     if "thull_compare_contours" in line:
-      print(newLine)
+      print(newLine, end = '')
+      continue
+    print(line, end = '')
 
 # Reference file
 aReferanceFile = input("Please set reference file: ")
