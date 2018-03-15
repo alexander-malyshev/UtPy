@@ -22,7 +22,7 @@ while True:
                 # Process is found.
                 isProcFoundOnCurrentIteration = True
                 if not isProcStarted:
-                    print("Process is found. Collecting started")
+                    print("Process is found. Collecting is started")
                     isProcStarted = True
 
                 currentMemory = psutil.Process(pid).memory_info().rss / (1024 * 1024)
